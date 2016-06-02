@@ -1,0 +1,38 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+GET /login  controllers.Application.login
+POST /login controllers.Application.handleButtonLogin
+
+GET /home controllers.Application.home
+
+GET /show controllers.HomeController.showQuestionnairesButton
+
+GET /files controllers.FileDownloadController.index
+
+GET /file controllers.FileDownloadController.downloadFile
+
+GET /homeNewQ controllers.HomeController.createNewQuestionnaire
+
+GET /newQ controllers.NewQuestionnaire.index
+GET /newQ/addQuestion controllers.NewQuestionnaire.addQuestion
+#GET /newQ/print controllers.NewQuestionnaire.printQ
+
+GET /test controllers.TestController.test
+
+#GET     /tasks                  controllers.Application.tasks
+#POST    /tasks                  controllers.Application.newTask
+#POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+#GET /login  controllers.Application.login
+
+
+#GET /admin controllers.Application.admin
+

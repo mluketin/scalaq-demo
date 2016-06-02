@@ -1,0 +1,15 @@
+@()
+
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@main("File Download") {
+
+    <h2>Download File</h2>
+
+    @form(routes.FileDownloadController.downloadFile()) {
+        <input type="submit" value="Show all questionnaires">
+    }
+}

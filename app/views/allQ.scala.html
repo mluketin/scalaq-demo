@@ -1,0 +1,65 @@
+@(quests: Seq[Quest])
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+
+@main("All Questionnaires") {
+
+    <h2>All questionnaires</h2>
+
+
+    <table id="all-q-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(quest <- quests) {
+            <tr>
+                <td>
+                    @quest.body
+                </td>
+                <td>
+                    @quest.description
+                </td>
+                <td>
+                    <div class="action-div">
+                        <a id="show">Edit</a>
+                    </div>
+                    <div>
+                        <a id="delete">Delete</a>
+                    </div>
+                </td>
+            </tr>
+
+        }
+        </tbody>
+    </table>
+    @*
+    @if(false) {
+        <p>
+
+            <input type="checkbox" name="AppSourceNewspaper">Newspaper<br/>
+            <input type="checkbox" name="AppSourceRecruiter">Recruiters<br/>
+            <input type="checkbox" name="AppSourceWeb">Web Resume Banks<br/>
+            <input type="checkbox" name="AppSourceMagazines">Magazines<br/>
+        </p>
+    }
+    <br/>
+    <br/>
+    <form action="demo_form.asp">
+        <label for="male">Male</label>
+        <input type="radio" name="gender" id="male" value="male"><br>
+        <label for="female">Female</label>
+        <input type="radio" name="gender" id="female" value="female"><br>
+        <label for="other">Other</label>
+        <input type="radio" name="gender" id="other" value="other"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    *@
+}

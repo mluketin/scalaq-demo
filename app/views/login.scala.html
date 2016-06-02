@@ -1,0 +1,23 @@
+@(loginForm: Form[(String, String)])
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@main("Login") {
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        @form(routes.Application.handleButtonLogin()) {
+
+        @helper.inputText(loginForm("email"), '_label -> null, 'class -> "login-class") @* will render value="marin" *@
+
+
+        @inputText(loginForm("pass"), '_label -> null, 'class -> "login-class")
+
+        <input type="submit" value="Create">
+
+    }
+    </div>
+}

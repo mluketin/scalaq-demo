@@ -1,0 +1,19 @@
+@()
+
+@import helper._
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+@main("Home") {
+
+    <h2>Home</h2>
+
+    @form(routes.HomeController.showQuestionnairesButton()) {
+        <input type="submit" value="Show all questionnaires">
+    }
+
+    @form(routes.HomeController.createNewQuestionnaire()) {
+        <input type="submit" value="New questionnaires">
+    }
+
+}

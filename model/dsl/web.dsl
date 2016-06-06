@@ -1,8 +1,8 @@
 module persistence
 {
-	aggregate User {
-	  String  email;
-    String  password;
+  aggregate User {
+    String  email { unique; }
+    binary hash;
     List<QOwnerEntity> qOwners;
     List<CQOwnerEntitiy> cqOwners;
   }

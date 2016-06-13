@@ -3,36 +3,37 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /  controllers.Application.index
 
-GET /login  controllers.Application.login
-POST /login controllers.Application.handleButtonLogin
+GET /login  controllers.Auth.login
+POST /login controllers.Auth.handleButtonLogin
 
-GET /home controllers.Application.home
+GET /logout controllers.Auth.logout
 
-GET /show controllers.HomeController.showQuestionnairesButton
+GET /toreg controllers.Auth.registration
 
-GET /files controllers.FileDownloadController.index
 
-GET /file controllers.FileDownloadController.downloadFile
+GET /register  controllers.Registration.index
+POST /register controllers.Registration.register
 
-GET /homeNewQ controllers.HomeController.createNewQuestionnaire
 
-GET /newQ controllers.NewQuestionnaire.index
-GET /newQ/addQuestion controllers.NewQuestionnaire.addQuestion
-#GET /newQ/print controllers.NewQuestionnaire.printQ
 
-GET /test controllers.TestController.test
+GET /home controllers.Home.index
 
-#GET     /tasks                  controllers.Application.tasks
-#POST    /tasks                  controllers.Application.newTask
-#POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
+GET /preview/:body/:desc controllers.Preview.index(body: String, desc: String)
+
+GET /file controllers.FileDownload.downloadFile
+
+GET /homeNewQ controllers.Home.createNewQuestionnaire
+
+GET /new controllers.NewQuestionnaire.test
+POST /new controllers.NewQuestionnaire.submit
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-#GET /login  controllers.Application.login
 
 
-#GET /admin controllers.Application.admin
 

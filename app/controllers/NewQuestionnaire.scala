@@ -1,137 +1,56 @@
 package controllers
 
-import play.api.mvc.Controller
-import play.api.mvc._
-import play.api.data._
+import com.scalaq.survey.model.questionnaire.Questionnaire
+import database.PersistanceAdapter
+import models.{PresentationQuestion, PresentationQuestionnaire, Specs}
+import play.api.data.Form
 import play.api.data.Forms._
-import models._
+import play.api.mvc.{Action, Controller}
 
-case class QuestionType(text: String)
+class NewQuestionnaire extends Controller with Secured  {
 
-case class Question(body: String, description: String)
-
-case class Questions(questions: List[Question])
-
-class NewQuestionnaire extends Controller {
-
-  var questionList: List[Question] = List()
-  var first = true
-
-//  val questionsForm: Form[Questions] = Form(
-//    mapping(
-//      "questions" -> seq(
-//          mapping(
-//            "body" -> nonEmptyText,
-//            "description" -> nonEmptyText
-//          ) (Question.apply)(Question.unapply)
-//      )
-//    )(Questions.apply)(Questions.unapply)
-//  )
-
-  val questionsForm: Form[Questions] = Form(
+  val questionsForm: Form[PresentationQuestionnaire] = Form(
     mapping(
+      "body" -> default(nonEmptyText, ""),
+      "description" -> default(nonEmptyText, ""),
       "questions" -> list(
         mapping(
-                      "body" -> default(nonEmptyText, ""),
-                      "description" -> default(nonEmptyText, "")
-        ) (Question.apply)(Question.unapply)
+          "tip" -> default(nonEmptyText, ""),
+          "body" -> default(nonEmptyText, ""),
+          "description" -> default(nonEmptyText, ""),
+          "spec" -> mapping(
+            "s1" -> list(text),
+            "s2" -> list(text)
+          )(Specs.apply)(Specs.unapply)
+        )(PresentationQuestion.apply)(PresentationQuestion.unapply)
       )
-    )(Questions.apply)(Questions.unapply)
+    )(PresentationQuestionnaire.apply)(PresentationQuestionnaire.unapply)
   )
 
-  val questionForm: Form[Question] = Form(
-    mapping(
-      "body" -> nonEmptyText,
-      "description" -> nonEmptyText
-    ) (Question.apply)(Question.unapply)
-  )
-
-  val filled = questionsForm.fill(Questions(List(
-    Question("prvo", "prvi desc"),
-    Question("drugo", "drugi")
-  )))
-
-
-  val types = Seq(QuestionType("Text Input"),
-    QuestionType("Single Select"),
-    QuestionType("Multi select"),
-    QuestionType("Ordinal Scale"),
-    QuestionType("Matrix Question"))
-
-
-//  val questionTypeForm = Form(
-//    "Choose Type" -> nonEmptyText
-//  )
-
-
-
-  def index = Action{
-//    Ok(views.html.newQ(types, questionsForm))//, questionList))
-    Ok(views.html.newQ(types, questionsForm))//, questionList))
+  def test = IsAuthenticated { username => implicit request =>
+    Ok(views.html.test(questionsForm))
   }
 
-  //pogeldat sta je upisano i vratit view sa dodanim stvarima
-  def addQuestion = Action { implicit request =>
-//    val newPart = (Question("","")) :: Nil
-    //    val newFilled = questionsForm.fill(Questions(questionList))
-//    questionList = questionList ::: newPart
-//
-//    Ok(views.html.newQ(types, questionsForm))//, questionList))
+  def submit = Action { implicit request =>
+
     questionsForm.bindFromRequest.fold(
       errors => {
         println("ERROR")
-        Ok(views.html.newQ(types, questionsForm))//, questionList))
+        Ok(views.html.test(questionsForm))
       },
 
       data => {
-//        if(!first) {
-          val newPart = (Question("","")) :: Nil
-          questionList = data.questions ::: newPart
-          println("NEW PART SIZE " + newPart.size)
-          println("DATA SIZE " + data.questions.size)
-          println("Q LIST SIZE " + questionList.size)
+        val email = request.session.get("email").get
 
-//        }
-//        else {
-//          first = false
-//        }
+        val questionnaireBody = data.body
+        val questionnaireDescription = if(data.description.length == 0) None else Some(data.description)
+        val questions = for(q <- data.questions) yield q.getQuestion()
 
+        val questionnaire = Questionnaire(questionnaireBody,questionnaireDescription,questions)
 
-//        val newList: List[Question] = data.questions ::: newPart
-        val newFilled = questionsForm.fill(Questions(questionList))
-        Ok(views.html.newQ(types, newFilled))//, questionList))
+        PersistanceAdapter.saveQuestionnaire(email, questionnaire)
+        Redirect(routes.Home.index())
       }
     )
-
-
   }
-
-//  def printQ = Action { implicit request =>
-//
-//      questionsForm.bindFromRequest.fold(
-//        errors => {
-//          println("ERROR")
-//          Ok(views.html.newQ(types, questionsForm))//, questionList))
-//        },
-//
-//        data => {
-//          println("SIZE: " + data.questions.size)
-////          val newPart = (Question("","")) :: Nil
-////          val newList: List[Question] = data.questions ::: newPart
-//
-////          val newFilled = questionsForm.fill(Questions(newList))
-//
-//          for(q <- data.questions) {
-//            println(q.body)
-//            println(q.description)
-//          }
-////          val newFilled = questionsForm.fill(Questions(data.questions))
-//
-//          Ok(views.html.newQ(types, questionsForm))//, questionList))
-//        }
-//      )
-//
-////    Ok(views.html.newQ(types, questionsForm))//, questionList))
-//  }
-
 }

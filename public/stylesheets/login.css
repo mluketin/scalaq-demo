@@ -1,0 +1,20 @@
+.login-class {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    color: #000;
+    display: block;
+    front-size: 1rem;
+    height: 1rem;
+    padding: 0.5rem;
+    vertical-align: middle;
+    width: 25%;
+}
+.login-class:after {
+    content: '*';
+    color: #EF5F5F;
+}
+
+.login-container {
+    padding-left: 20px;
+}

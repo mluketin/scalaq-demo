@@ -1,0 +1,51 @@
+.question-class {
+    border: solid;
+    border-color: #2294ff;
+    padding-left: 1%;
+}
+
+#title {
+
+}
+
+.restricted {
+    color: #ff1012;
+}
+
+.error {
+    color: #ff1012;
+}
+
+#table-container {
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-right: 1%;
+}
+
+#f1 {
+    width: 5%;
+}
+
+input[name="pass"] {
+    width: 20%;
+}
+
+input[name="repass"] {
+    width: 20%;
+}
+
+input[type="text"] {
+    width: 20%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+input[type="password"] {
+    width: 20%;
+}
+
+input[name="email"] {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 20%;
+}

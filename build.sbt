@@ -11,6 +11,7 @@ libraryDependencies ++= Seq( jdbc , cache , ws   , specs2 % Test )
 libraryDependencies += "org.revenj" % "revenj-core" % "0.9.9"
 
 resolvers += "NGS Releases" at "http://ngs.hr/nexus/content/repositories/releases/"
+
 libraryDependencies += "hr.ngs.templater" %% "templater" % "2.3.2"
 
 

@@ -1,17 +1,23 @@
 module persistence
 {
   aggregate User {
-    String  email { unique; }
+    String email { unique; }
     binary hash;
     List<QOwnerEntity> qOwners;
-    List<CQOwnerEntitiy> cqOwners;
+    List<CQOwnerEntity> cqOwners;
+    
+    specification hasEmail
+          'it => it.email == email'
+          {
+              String email;
+          }
   }
   
   entity QOwnerEntity {
     Questionnaire *questionnaire;
   }
   
-  entity CQOwnerEntitiy {
+  entity CQOwnerEntity {
     CompletedQuestionnaire *completedQuestionnaire;
   }
 }

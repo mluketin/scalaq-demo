@@ -1,0 +1,114 @@
+@(q: com.scalaq.survey.model.questionnaire.Questionnaire)(implicit request: RequestHeader)
+
+    @import com.scalaq.survey.model.questionnaire._
+    @import helper._
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
+    @import scala.collection.JavaConverters._
+
+
+    @main("Preview") {
+
+        <div class="preview-container">
+            <div>
+                <div><h2>@q.name</h2></div>
+            </div>
+            @if(q.description != None) {
+                <div>
+                    <div><h4>@q.description.get</h4></div>
+                </div>
+            }
+            <br>
+            <div id="questions">
+            @for(question <- q.questions) {
+                <div>
+                    <h4>@question.questionText</h4>
+                </div>
+                @if(question.questionDescription != None) {
+                    <div>
+                        <div><h5>@question.questionDescription.get</h5></div>
+                    </div>
+                }
+                @if(question.isInstanceOf[com.scalaq.survey.model.question.TextInputQuestion]) {
+                    <input type="text">
+                }
+                @if(question.isInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion]) {
+                    <div>
+                        @if(question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].minLabel != None) {
+                            <span>@question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].minLabel.get </span>
+                        }
+                        <span>
+                        @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].min
+                                until question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].max) {
+
+                            <label>
+                                <div>@i</div>
+                                <script>
+                         var namevalue = getRadioButtonName();
+                         document.write('<div><input type=radio name="' + namevalue + '"></div>');
+                        </script>
+                            </label>
+                        }
+                        </span>
+                        @if(question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].maxLabel != None) {
+                            <span> @question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].maxLabel.get</span>
+                        }
+                    </div>
+                }
+
+                @if(question.isInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion]) {
+                    <div>
+                        @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].offeredAnswers) {
+                            <div>
+                                <script>
+                        var namevalue = getRadioButtonName();
+                        document.write('<input type=radio name="' + namevalue + '">');
+                    </script>
+                                @i
+                            </div>
+                        }
+                        @if(question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].other != None) {
+                            <div>
+                                <script>
+                                        var namevalue = getRadioButtonName();
+                                        document.write('<input type=radio name="' + namevalue + '">');
+                                </script>
+                                @question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].other.get
+                            </div>
+                            <input type="text">
+
+                            }
+                    </div>
+                }
+
+                @if(question.isInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion]) {
+                    <div>
+                        @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].offeredAnswers) {
+
+                            <div><input type=checkbox> @i</div>
+                        }
+                        @if(question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].other != None) {
+                            <div>
+                                <input type=checkbox>
+                                question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].other.get
+                            </div>
+                            <input type="text">
+                            }
+                    </div>
+                }
+
+                @if(question.isInstanceOf[com.scalaq.survey.model.question.MatrixQuestion]) {
+                    <div>
+                    @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns) {
+
+                    }
+                    </div>
+                }
+            }
+            </div>
+        </div>
+
+
+
+
+    }

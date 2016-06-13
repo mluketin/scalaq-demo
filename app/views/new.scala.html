@@ -1,0 +1,50 @@
+@(questionsForm: Form[PresentationQuestionnaire])(implicit request: RequestHeader)
+
+    @import helper._
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
+
+    @main("New Questionnaire") {
+
+        <h2>New Questionnaire</h2>
+
+        @form(routes.NewQuestionnaire.submit()) {
+            @*<dl id=body_field ><dt><label for=body>Questionnaire Name</label></dt><dd><input required id=body class=login-class name=body type=text></dd><dd class=info></dd></dl>*@
+
+            @*<dl id=description_field ><dt><label for=description>Questionnaire Description</label></dt><dd><input id=description class=login-class name=description type=password></dd><dd class=info></dd></dl>*@
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <input required id=inputdefault class=form-control name=body type=text placeholder="Questionnaire name">
+                        <input id=inputdefault class=form-control name=description type=text placeholder="Questionnaire description">
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <div id="qcontainer"></div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <button class="btn btn-info" value="" type="button" onclick="newTQuestion()" >
+                        New Text Input Question</button>
+
+                    <button class="btn btn-info" value="" type="button" onclick="newSQuestion()" >
+                        New Single Select Question</button>
+
+                    <button class="btn btn-info" value="" type="button" onclick="newMQuestion()" >
+                        New Multi Select Question</button>
+
+                    <button class="btn btn-info" value="" type="button" onclick="newOQuestion()" >
+                        New Ordinal Scale Question</button>
+
+                    <button class="btn btn-info" value="" type="button" onclick="newXQuestion()" >
+                        New Matrix Question</button>
+
+                    <input class="btn-success" type="submit" value="Submit">
+                </div>
+            </div>
+
+        }
+    }

@@ -1,23 +1,62 @@
-@(loginForm: Form[(String, String)])
+@(loginForm: Form[(String, String)])(implicit request: RequestHeader)
 
-@import helper._
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@main("Login") {
-
-    <div class="login-container">
-        <h2>Login</h2>
-
-        @form(routes.Application.handleButtonLogin()) {
-
-        @helper.inputText(loginForm("email"), '_label -> null, 'class -> "login-class") @* will render value="marin" *@
+    @import helper._
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
 
 
-        @inputText(loginForm("pass"), '_label -> null, 'class -> "login-class")
+    @main("Login") {
 
-        <input type="submit" value="Create">
+        <div class="login-container">
+            <h2>Login</h2>
 
+            @form(routes.Auth.handleButtonLogin()) {
+
+                @request.flash.get("success").map { message =>
+                    <p class="success">
+                        @message
+                    </p>
+                }
+
+                @loginForm.globalError.map { error =>
+                    <p class="error">
+                        @error.message
+                    </p>
+                }
+
+                @request.flash.get("restricted").map { message =>
+                    <p class="restricted">
+                        @message
+                    </p>
+                }
+
+                <dl id=email_field >
+                    <dt>
+                        <label for=email>Email</label>
+                    </dt>
+                    <dd>
+                        <input required id=inputdefault class=form-control name=email type=text></dd>
+                </dl>
+
+
+                <dl id=pass_field >
+                    <dt>
+                        <label for=pass>Password</label>
+                    </dt>
+                    <dd>
+                        <input required id=inputdefault class=form-control name=pass type=password>
+                    </dd>
+                </dl>
+
+
+                <input class="btn btn-success" type="submit" value="Log in">
+                <br>
+                <br>
+                <br>
+                <br>
+            }
+            @form(routes.Auth.registration()) {
+                <input class="btn btn-link" type="submit" value="Registration">
+                }
+        </div>
     }
-    </div>
-}

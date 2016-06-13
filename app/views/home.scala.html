@@ -1,19 +1,97 @@
-@()
+@(questionnaires: Seq[HomeViewQuestionnaire])(implicit request: RequestHeader)
 
-@import helper._
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+        @import helper._
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
 
-@main("Home") {
+    @main("Home") {
 
-    <h2>Home</h2>
+        <div style="margin-left: 6%">
+            <h2>Home</h2>
 
-    @form(routes.HomeController.showQuestionnairesButton()) {
-        <input type="submit" value="Show all questionnaires">
+
+            @form(routes.Home.createNewQuestionnaire()) {
+                <input class="btn btn-info" type="submit" value="New questionnaires">
+                }
+        </div>
+
+            <div id="table-container" style="width: 90%">
+
+
+                <table id="all-q-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Active</th>
+                            <th>Link</th>
+
+                            <th>Statistics</th>
+                            <th>Preview</th>
+                            <th>Actions</th>
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(q <- questionnaires) {
+                        <tr>
+                            <td>
+                            @q.name
+                            </td>
+                            <td>
+                            @q.description
+                            </td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <div class="slider round"></div>
+                                </label>
+
+                            </td>
+                            <td>
+                                <span>
+                                    <input class="btn btn-info" type="button" value="Link">
+                                </span>
+                            </td>
+                            <td>
+                            @form(routes.FileDownload.downloadFile()) {
+                                <input class="btn btn-info" type="submit" value="Download">
+                                }
+                            </td>
+
+                            <td>
+
+                                    <span>
+                                    @if(q.description.length == 0) {
+                                        @form(routes.Preview.index(q.name, " ")) {
+                                            <input class="btn btn-info" type="submit" value="View Questionnaire">
+                                        }
+                                    } else {
+                                        @form(routes.Preview.index(q.name, q.description)) {
+                                            <input class="btn btn-info" type="submit" value="View Questionnaire">
+                                        }
+                                    }
+                                    </span>
+
+                            </td>
+
+                            <td>
+                                <div class="btn-group">
+                                    @* <input class="btn btn-success" type="button" id="show" value="Edit"> *@
+                                <input class="btn btn-danger" type="submit" id="show" value="Delete">
+
+
+                                </div>
+                            </td>
+                        </tr>
+
+
+                    }
+                    </tbody>
+                </table>
+        </div>
+
     }
-
-    @form(routes.HomeController.createNewQuestionnaire()) {
-        <input type="submit" value="New questionnaires">
-    }
-
-}

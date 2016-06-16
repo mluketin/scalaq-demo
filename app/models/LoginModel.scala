@@ -15,4 +15,7 @@ object LoginModel {
     }
   }
 
+  def getUserId(email: String): Option[Int] = {
+    PersistanceAdapter.getUserId(email)
+  }
 }

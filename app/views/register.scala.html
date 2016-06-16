@@ -1,56 +1,50 @@
-@(loginForm: Form[(String, String, String)])(implicit request: RequestHeader)
+@(registerForm: Form[(String, String, String)])(implicit request: RequestHeader)
 
 @import helper._
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
 @main("Registration") {
-
     <div class="login-container">
         <h2>Registration</h2>
-
         @form(routes.Registration.register()) {
-
-            @loginForm.globalError.map { error =>
+            @registerForm.globalError.map { error =>
                 <p class="error">
                     @error.message
                 </p>
             }
-
             @request.flash.get("bad").map { message =>
                 <p class="bad">
                     @message
                 </p>
             }
 
-            <dl id=email_field >
-                <dt>
-                    <label for=email>Email</label>
-                </dt>
-                <dd>
-                    <input required id=inputdefault class=form-control name=email type=text</dd>
-            </dl>
+            @inputText(registerForm("email"),
+                '_label -> "Email",
+                'id -> "inputdefault",
+                'class -> "form-control",
+                'type -> "text",
+                '_showConstraints -> false)
 
-            <dl id=pass_field >
-                <dt>
-                    <label for=pass>Password</label>
-                </dt>
-                <dd>
-                    <input required id=inputdefault class=form-control name=pass type=password>
-                </dd>
-            </dl>
+            @inputText(registerForm("pass"),
+                '_label -> "Password",
+                'id -> "inputdefault",
+                'class -> "form-control",
+                'type -> "password",
+                '_showConstraints -> false)
 
-            <dl id=repass_field >
-                <dt>
-                    <label for=repass>Repeat password</label>
-                </dt>
-                <dd>
-                    <input required id=inputdefault class="form-control my-class" name=repass type=password>
-                </dd>
-            </dl>
-
+            @inputText(registerForm("repass"),
+                '_label -> "Repeat password",
+                'id -> "inputdefault",
+                'class -> "form-control",
+                'type -> "password",
+                '_showConstraints -> false)
 
             <input class="btn btn-success" type="submit" value="Submit">
-            }
+        }
     </div>
 }
+
+
+
+

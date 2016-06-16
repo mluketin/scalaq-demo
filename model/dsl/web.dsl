@@ -15,6 +15,8 @@ module persistence
   
   entity QOwnerEntity {
     Questionnaire *questionnaire;
+    boolean active;
+    long hash;
   }
   
   entity CQOwnerEntity {

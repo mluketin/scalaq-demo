@@ -20,9 +20,24 @@ POST /register controllers.Registration.register
 
 GET /home controllers.Home.index
 
+GET /home/new/:userId/:questId/:hash controllers.CompleteQuestionnaire.index(userId: Int, questId: Int, hash: Long)
+
+GET /home/:userId/:questId controllers.Home.switch(userId: Int, questId: Int)
+
+GET /delete/:userId/:questId controllers.Home.delete(userId: Int, questId: Int)
+
+
+POST /complete controllers.CompleteQuestionnaire.complete
+
+
 GET /preview/:body/:desc controllers.Preview.index(body: String, desc: String)
 
 GET /file controllers.FileDownload.downloadFile
+
+GET /docx/:userId/:questId controllers.FileDownload.downloadDocx(userId: Int, questId: Int)
+
+GET /xlsx/:userId/:questId controllers.FileDownload.downloadXlsx(userId: Int, questId: Int)
+
 
 GET /homeNewQ controllers.Home.createNewQuestionnaire
 

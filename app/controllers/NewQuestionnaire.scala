@@ -28,7 +28,7 @@ class NewQuestionnaire extends Controller with Secured  {
   )
 
   def test = IsAuthenticated { username => implicit request =>
-    Ok(views.html.test(questionsForm))
+    Ok(views.html.newq(questionsForm))
   }
 
   def submit = Action { implicit request =>
@@ -36,7 +36,7 @@ class NewQuestionnaire extends Controller with Secured  {
     questionsForm.bindFromRequest.fold(
       errors => {
         println("ERROR")
-        Ok(views.html.test(questionsForm))
+        Ok(views.html.newq(questionsForm))
       },
 
       data => {

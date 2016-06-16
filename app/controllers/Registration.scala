@@ -32,7 +32,7 @@ class Registration extends Controller {
             "success" -> "Registration successful")
         } else {
           Ok(views.html.register(registerForm)).flashing(
-            "bad" -> "Registration successful")
+            "bad" -> "Registration unsuccessful")
         }
       }
     )

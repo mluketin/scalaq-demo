@@ -1,1 +1,200 @@
-@()
+@(forma: Form[(String, String, List[(String, String, String)])], q: com.scalaq.survey.model.questionnaire.Questionnaire, userId: Int, questId: Int)(implicit request: RequestHeader)
+
+@import helper._; var counter = 0; var aNum = 0; var miniCounter = 0; var columns = 0;
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import scala.collection.JavaConverters._
+
+
+@main("Fill") {
+    @helper.form(routes.CompleteQuestionnaire.complete()) {
+
+        <input hidden type="text" name="user" value=@userId>
+        <input hidden type="text" name="quest" value=@questId>
+
+        @forma.globalError.map { error =>
+            <p class="error">
+                @error.message
+            </p>
+        }
+
+        <div class="preview-container">
+            <div>
+                <div><h2>@q.name</h2></div>
+            </div>
+            @if(q.description.isDefined) {
+                <div>
+                    <div><h4>@q.description.get</h4></div>
+                </div>
+            }
+            <br>
+            <div id="questions">
+                @for(question <- q.questions) {
+                    @{counter = q.questions.indexOf(question)}
+
+                    <div>
+                        <div>
+                            <h4>@question.questionText</h4>
+                        </div>
+                        @if(question.questionDescription.isDefined) {
+                            <div>
+                                <div><h5>@question.questionDescription.get</h5></div>
+                            </div>
+                        }
+                    </div>
+
+
+                    <div id=@{
+                        "question" + counter
+                    } >
+                        @if(question.isInstanceOf[com.scalaq.survey.model.question.TextInputQuestion]) {
+                            <script>
+                                    newTextAnswer(@counter);
+                            </script>
+
+                        }
+
+
+                        @if(question.isInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion]) {
+
+                            <script>
+                                    newOrdinalAnswer(@counter);
+                            </script>
+
+                            <div>
+                                @if(question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].minLabel != None) {
+                                    <span>@{question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion]
+                                        .minLabel.get} </span>
+                                }
+                                <span>
+                                @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].min
+                                        until question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].max) {
+
+                                    <label id=@{
+                                        "label" + i
+                                    } >
+                                        <div>@i</div>
+                                        <script>
+                                              generateRadioButton(@i, @counter);
+                                            </script>
+                                    </label>
+                                }
+                                </span>
+                                @if(question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion].maxLabel != None) {
+                                    <span> @{question.asInstanceOf[com.scalaq.survey.model.question.OrdinalScaleQuestion]
+                                        .maxLabel.get}</span>
+                                }
+                            </div>
+                        }
+
+
+
+
+
+
+                        @if(question.isInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion]) {
+                            <script>
+                                    newSingleAnswerFirstPart(@counter);
+
+                            </script>
+                                @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].offeredAnswers) {
+                                    @{aNum = question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].offeredAnswers.indexOf(i)}
+
+                                        <script>
+                                            generateSingleRadioButton(@aNum, @counter, '@i')
+                                     </script>
+                                }
+                                @if(question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].other != None) {
+                                        <script>
+                                                generateSingleOtherRadioBtn(@counter, '@question.asInstanceOf[com.scalaq.survey.model.question.SingleSelectQuestion].other.get');
+                                        </script>
+                                    } else {
+                                        <script>
+                                          newSingleAnswerOtherPart(@counter);
+                                        </script>
+                                     }
+                        }
+
+
+
+                        @if(question.isInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion]) {
+
+                            <script>
+                                    newMultiAnswer(@counter);
+                            </script>
+
+                            @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].offeredAnswers) {
+                                @{aNum = question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].offeredAnswers.indexOf(i)}
+
+                                <script>
+                                    generateCheckBoxes(@aNum, @counter, '@i');
+                                </script>
+
+                                @*<div><input type=checkbox> @i</div>*@
+                                }
+                                @if(question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].other != None) {
+
+                                    generateOtherCheckBox(@counter, '@question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].other.get');
+
+                                    <div>
+                                        <input type=checkbox>
+                                        question.asInstanceOf[com.scalaq.survey.model.question.MultiSelectQuestion].other.get
+                                    </div>
+                                    <input type="text">
+                                }
+                        }
+
+                        @if(question.isInstanceOf[com.scalaq.survey.model.question.MatrixQuestion]) {
+                            @{columns = question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns.size + 1}
+
+                            <script>
+
+                                    newMatrixAnswer(@counter, @{columns-1});
+                            </script>
+
+                            <div>
+
+                                <table class="table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns) {
+                                                <th>@i</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].rows) {
+                                        @{miniCounter = question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].rows.indexOf(i)}
+                                        <tr id=@{"tr" + counter + "_" + miniCounter}>
+                                            <td>@{i + "  "}</td>
+
+
+
+                                            @for(j <- 0 until columns-1) {
+                                                <script>
+                                                    generateRadioMatrixButton(@counter, @miniCounter, @j);
+                                                </script>
+
+                                            }
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        }
+                    }
+
+            </div>
+
+                <br>
+                <br>
+                <br>
+                <input class="btn btn-success" type="submit" value="Submit">
+
+            </div>
+        </div>
+    }
+}

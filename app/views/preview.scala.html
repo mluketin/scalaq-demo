@@ -1,6 +1,6 @@
 @(q: com.scalaq.survey.model.questionnaire.Questionnaire)(implicit request: RequestHeader)
 
-    @import com.scalaq.survey.model.questionnaire._
+    @import com.scalaq.survey.model.questionnaire._; var columns = 0; var counter = 0; var miniCounter = 0
     @import helper._
     @import play.api.Play.current
     @import play.api.i18n.Messages.Implicits._
@@ -21,6 +21,8 @@
             <br>
             <div id="questions">
             @for(question <- q.questions) {
+                @{counter = q.questions.indexOf(question)}
+
                 <div>
                     <h4>@question.questionText</h4>
                 </div>
@@ -98,10 +100,36 @@
                 }
 
                 @if(question.isInstanceOf[com.scalaq.survey.model.question.MatrixQuestion]) {
-                    <div>
-                    @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns) {
 
-                    }
+                    @{columns = question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns.size + 1}
+
+                    <div>
+
+                     <table class="table-bordered">
+                         <thead>
+                         <tr>
+                             <th></th>
+                             @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].columns) {
+                                <th>@i</th>
+                             }
+                         </tr>
+                         </thead>
+                         <tbody>
+                            @for(i <- question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].rows) {
+                                @{miniCounter = question.asInstanceOf[com.scalaq.survey.model.question.MatrixQuestion].rows.indexOf(i)}
+                                <tr>
+                                    <td>@{i + "  "}</td>
+                                    @for(j <- 1 until columns) {
+                                        <td>
+                                            <input type="radio" name=@{"group" + counter + "_" + miniCounter}>
+                                        </td>
+                                        }
+                                </tr>
+                            }
+                         </tbody>
+                     </table>
+
+
                     </div>
                 }
             }
